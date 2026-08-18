@@ -1,0 +1,296 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --fundo: #f4f6fb;
+    --calculadora: #ffffff;
+    --visor: #f1f3f8;
+    --texto: #202124;
+    --texto-secundario: #70757a;
+    --botao: #eef0f5;
+    --botao-hover: #e1e4eb;
+    --operador: #6c63ff;
+    --operador-hover: #574fe0;
+    --igual: #20a36a;
+    --igual-hover: #168653;
+    --funcao: #ff6b6b;
+    --funcao-hover: #e85252;
+    --borda: #e5e7eb;
+    --sombra: rgba(0, 0, 0, 0.12);
+}
+
+body.dark {
+    --fundo: #101114;
+    --calculadora: #1b1d23;
+    --visor: #111318;
+    --texto: #f5f5f5;
+    --texto-secundario: #a7a9b0;
+    --botao: #292c34;
+    --botao-hover: #353943;
+    --borda: #30333b;
+    --sombra: rgba(0, 0, 0, 0.4);
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    transition: background 0.3s ease;
+}
+
+.container {
+    width: 100%;
+    max-width: 420px;
+}
+
+.calculadora {
+    background: var(--calculadora);
+
+    border: 1px solid var(--borda);
+    border-radius: 25px;
+
+    padding: 22px;
+
+    box-shadow: 0 20px 50px var(--sombra);
+}
+
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.cabecalho h1 {
+    font-size: 25px;
+    margin-bottom: 5px;
+}
+
+.cabecalho p {
+    font-size: 13px;
+    color: var(--texto-secundario);
+}
+
+.tema {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+    border: none;
+
+    background: var(--botao);
+    color: var(--texto);
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.tema:hover {
+    background: var(--botao-hover);
+}
+
+.visor {
+    background: var(--visor);
+
+    border-radius: 18px;
+
+    min-height: 120px;
+
+    padding: 20px;
+
+    margin-bottom: 18px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    text-align: right;
+
+    overflow: hidden;
+}
+
+.expressao {
+    min-height: 25px;
+
+    font-size: 16px;
+
+    color: var(--texto-secundario);
+
+    word-break: break-all;
+}
+
+.resultado {
+    font-size: 42px;
+    font-weight: bold;
+
+    margin-top: 5px;
+
+    word-break: break-all;
+}
+
+.botoes {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 10px;
+}
+
+.botoes button {
+    height: 65px;
+
+    border: none;
+    border-radius: 15px;
+
+    background: var(--botao);
+    color: var(--texto);
+
+    font-size: 21px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+}
+
+.botoes button:hover {
+    background: var(--botao-hover);
+    transform: translateY(-2px);
+}
+
+.botoes button:active {
+    transform: scale(0.96);
+}
+
+.botoes .operador {
+    background: var(--operador);
+    color: white;
+}
+
+.botoes .operador:hover {
+    background: var(--operador-hover);
+}
+
+.botoes .funcao {
+    background: var(--funcao);
+    color: white;
+}
+
+.botoes .funcao:hover {
+    background: var(--funcao-hover);
+}
+
+.botoes .igual {
+    background: var(--igual);
+    color: white;
+}
+
+.botoes .igual:hover {
+    background: var(--igual-hover);
+}
+
+.zero {
+    grid-column: span 2;
+}
+
+.historico {
+    margin-top: 25px;
+
+    border-top: 1px solid var(--borda);
+
+    padding-top: 18px;
+}
+
+.historico-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+.historico h2 {
+    font-size: 18px;
+}
+
+#limparHistorico {
+    border: none;
+
+    background: transparent;
+
+    color: var(--operador);
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+#limparHistorico:hover {
+    text-decoration: underline;
+}
+
+#listaHistorico {
+    list-style: none;
+
+    max-height: 130px;
+
+    overflow-y: auto;
+}
+
+#listaHistorico li {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 9px 0;
+
+    border-bottom: 1px solid var(--borda);
+
+    font-size: 14px;
+}
+
+#listaHistorico li span:last-child {
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+
+    color: var(--texto-secundario);
+
+    font-size: 12px;
+
+    margin-top: 20px;
+}
+
+@media (max-width: 400px) {
+
+    .calculadora {
+        padding: 16px;
+    }
+
+    .botoes {
+        gap: 7px;
+    }
+
+    .botoes button {
+        height: 58px;
+    }
+
+    .resultado {
+        font-size: 34px;
+    }
+}
