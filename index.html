@@ -1,87 +1,197 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Calculadora | Nayeli</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Calculadora web desenvolvida por Nayeli Vitória com HTML, CSS e JavaScript.">
+
+    <title>Calculadora | Nayeli Vitória</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <main class="container">
+    <main class="pagina">
 
         <section class="calculadora">
 
-            <div class="cabecalho">
+            <header class="cabecalho">
+
                 <div>
                     <h1>Calculadora</h1>
-                    <p>HTML • CSS • JavaScript</p>
+
+                    <p>
+                        Desenvolvida por
+                        <strong>Nayeli Vitória</strong>
+                    </p>
                 </div>
 
-                <button id="tema" class="tema" title="Alterar tema">
-                    ☀
+                <button
+                    id="tema"
+                    class="botao-tema"
+                    aria-label="Alterar tema">
+                    ☀️
                 </button>
+
+            </header>
+
+
+            <div class="apresentacao">
+
+                <h2>Olá! Eu sou Nayeli Vitória</h2>
+
+                <p>
+                    Sou estudante de Desenvolvimento de Sistemas
+                    e estou construindo meu portfólio na área de
+                    tecnologia e desenvolvimento web.
+                </p>
+
             </div>
 
+
             <div class="visor">
-                <div id="expressao" class="expressao"></div>
-                <div id="resultado" class="resultado">0</div>
+
+                <div id="expressao"
+                     class="expressao">
+                </div>
+
+                <div id="resultado"
+                     class="resultado">
+                    0
+                </div>
+
             </div>
+
 
             <div class="botoes">
 
-                <button class="funcao" data-acao="limpar">AC</button>
-                <button class="funcao" data-acao="apagar">⌫</button>
-                <button class="operador" data-valor="%">%</button>
-                <button class="operador" data-valor="/">÷</button>
+                <button
+                    class="funcao"
+                    data-acao="limpar">
+                    AC
+                </button>
+
+                <button
+                    class="funcao"
+                    data-acao="apagar">
+                    ⌫
+                </button>
+
+                <button
+                    class="operador"
+                    data-valor="%">
+                    %
+                </button>
+
+                <button
+                    class="operador"
+                    data-valor="/">
+                    ÷
+                </button>
+
 
                 <button data-valor="7">7</button>
                 <button data-valor="8">8</button>
                 <button data-valor="9">9</button>
-                <button class="operador" data-valor="*">×</button>
+
+                <button
+                    class="operador"
+                    data-valor="*">
+                    ×
+                </button>
+
 
                 <button data-valor="4">4</button>
                 <button data-valor="5">5</button>
                 <button data-valor="6">6</button>
-                <button class="operador" data-valor="-">−</button>
+
+                <button
+                    class="operador"
+                    data-valor="-">
+                    −
+                </button>
+
 
                 <button data-valor="1">1</button>
                 <button data-valor="2">2</button>
                 <button data-valor="3">3</button>
-                <button class="operador" data-valor="+">+</button>
 
-                <button class="zero" data-valor="0">0</button>
-                <button data-valor=".">.</button>
-                <button class="igual" data-acao="calcular">=</button>
+                <button
+                    class="operador"
+                    data-valor="+">
+                    +
+                </button>
+
+
+                <button
+                    class="zero"
+                    data-valor="0">
+                    0
+                </button>
+
+                <button data-valor=".">
+                    .
+                </button>
+
+                <button
+                    class="igual"
+                    data-acao="calcular">
+                    =
+                </button>
 
             </div>
 
-            <div class="historico">
+
+            <section class="historico">
 
                 <div class="historico-topo">
+
                     <h2>Histórico</h2>
 
                     <button id="limparHistorico">
                         Limpar
                     </button>
+
                 </div>
 
                 <ul id="listaHistorico"></ul>
 
-            </div>
+                <p
+                    id="historicoVazio"
+                    class="historico-vazio">
+                    Nenhum cálculo realizado ainda.
+                </p>
+
+            </section>
+
 
             <footer>
-                Desenvolvido por <strong>Nayeli</strong>
+
+                <p>
+                    Projeto desenvolvido por
+                    <strong>Nayeli Vitória</strong>
+                </p>
+
+                <span>
+                    HTML • CSS • JavaScript
+                </span>
+
             </footer>
 
         </section>
 
     </main>
 
+
     <script src="script.js"></script>
 
 </body>
+
 </html>
