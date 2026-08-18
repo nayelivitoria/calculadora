@@ -1,25 +1,151 @@
-const resultado = document.getElementById("resultado");
-const expressao = document.getElementById("expressao");
 
-const botoes = document.querySelectorAll(".botoes button");
+const resultado =
+    document.getElementById("resultado");
 
-const tema = document.getElementById("tema");
+const expressao =
+    document.getElementById("expressao");
 
-const listaHistorico = document.getElementById("listaHistorico");
-const limparHistorico = document.getElementById("limparHistorico");
+const botoes =
+    document.querySelectorAll(".botoes button");
+
+const tema =
+    document.getElementById("tema");
+
+const listaHistorico =
+    document.getElementById("listaHistorico");
+
+const limparHistorico =
+    document.getElementById("limparHistorico");
+
+const historicoVazio =
+    document.getElementById("historicoVazio");
+
 
 let calculo = "";
 
 
-// Adicionar números e operadores
+// ==============================
+// HISTÓRICO
+// ==============================
+
+let historico =
+    JSON.parse(
+        localStorage.getItem("historicoCalculadora")
+    ) || [];
+
+
+// Mostrar histórico salvo
+function mostrarHistorico() {
+
+    listaHistorico.innerHTML = "";
+
+    if (historico.length === 0) {
+
+        historicoVazio.style.display = "block";
+
+        return;
+    }
+
+    historicoVazio.style.display = "none";
+
+
+    historico.forEach(function(item) {
+
+        const li =
+            document.createElement("li");
+
+        const conta =
+            document.createElement("span");
+
+        const valor =
+            document.createElement("span");
+
+
+        conta.textContent = item.conta;
+
+        valor.textContent = item.resultado;
+
+
+        li.appendChild(conta);
+
+        li.appendChild(valor);
+
+        listaHistorico.appendChild(li);
+
+    });
+}
+
+
+// Salvar histórico
+function adicionarHistorico(
+    conta,
+    valor
+) {
+
+    historico.unshift({
+
+        conta: formatarExpressao(conta),
+
+        resultado: valor
+
+    });
+
+
+    // Guarda somente os últimos 20 cálculos
+    historico =
+        historico.slice(0, 20);
+
+
+    localStorage.setItem(
+
+        "historicoCalculadora",
+
+        JSON.stringify(historico)
+
+    );
+
+
+    mostrarHistorico();
+}
+
+
+// Apagar histórico
+limparHistorico.addEventListener(
+    "click",
+    function() {
+
+        historico = [];
+
+        localStorage.removeItem(
+            "historicoCalculadora"
+        );
+
+        mostrarHistorico();
+
+    }
+);
+
+
+// ==============================
+// CALCULADORA
+// ==============================
+
+
+// Adicionar valor
 function adicionar(valor) {
 
-    if (resultado.textContent === "Erro") {
+    if (
+        resultado.textContent === "Erro"
+    ) {
+
         calculo = "";
+
         resultado.textContent = "0";
     }
 
+
     calculo += valor;
+
 
     atualizarVisor();
 }
@@ -28,19 +154,32 @@ function adicionar(valor) {
 // Atualizar visor
 function atualizarVisor() {
 
-    let visual = calculo
-        .replace(/\*/g, " × ")
-        .replace(/\//g, " ÷ ")
-        .replace(/\+/g, " + ")
-        .replace(/-/g, " − ");
+    expressao.textContent =
+        formatarExpressao(calculo);
 
-    expressao.textContent = visual;
 
-    resultado.textContent = calculo || "0";
+    resultado.textContent =
+        calculo || "0";
 }
 
 
-// Limpar calculadora
+// Formatar símbolos
+function formatarExpressao(valor) {
+
+    return valor
+
+        .replace(/\*/g, " × ")
+
+        .replace(/\//g, " ÷ ")
+
+        .replace(/\+/g, " + ")
+
+        .replace(/-/g, " − ");
+
+}
+
+
+// Limpar
 function limpar() {
 
     calculo = "";
@@ -51,171 +190,305 @@ function limpar() {
 }
 
 
-// Apagar último número
+// Apagar
 function apagar() {
 
-    calculo = calculo.slice(0, -1);
+    calculo =
+        calculo.slice(0, -1);
 
     atualizarVisor();
 }
 
 
-// Calcular
-function calcular() {
+// ==============================
+// PORCENTAGEM
+// ==============================
+
+function porcentagem() {
 
     if (!calculo) {
+
         return;
     }
 
+
     try {
 
-        let expressaoOriginal = calculo;
+        const valor =
+            Function(
+                `"use strict"; return (${calculo})`
+            )();
 
-        let resultadoCalculado = Function(
-            `"use strict"; return (${calculo})`
-        )();
 
-        if (!Number.isFinite(resultadoCalculado)) {
-            throw new Error();
-        }
+        const porcentagem =
+            valor / 100;
 
-        resultadoCalculado =
-            Math.round(
-                (resultadoCalculado + Number.EPSILON) * 100000000
-            ) / 100000000;
 
-        adicionarHistorico(
-            expressaoOriginal,
-            resultadoCalculado
-        );
+        calculo =
+            porcentagem.toString();
 
-        expressao.textContent =
-            expressaoOriginal
-                .replace(/\*/g, " × ")
-                .replace(/\//g, " ÷ ")
-                .replace(/\+/g, " + ")
-                .replace(/-/g, " − ");
 
-        resultado.textContent = resultadoCalculado;
+        atualizarVisor();
 
-        calculo = resultadoCalculado.toString();
 
-    } catch (erro) {
+    } catch {
 
         resultado.textContent = "Erro";
-
-        expressao.textContent = "Operação inválida";
 
         calculo = "";
     }
 }
 
 
-// Adicionar ao histórico
-function adicionarHistorico(expressaoCalculada, resultadoCalculado) {
+// ==============================
+// CALCULAR
+// ==============================
 
-    const item = document.createElement("li");
+function calcular() {
 
-    const conta = document.createElement("span");
+    if (!calculo) {
 
-    const valor = document.createElement("span");
+        return;
+    }
 
-    conta.textContent = expressaoCalculada
-        .replace(/\*/g, " × ")
-        .replace(/\//g, " ÷ ")
-        .replace(/\+/g, " + ")
-        .replace(/-/g, " − ");
 
-    valor.textContent = resultadoCalculado;
+    try {
 
-    item.appendChild(conta);
-    item.appendChild(valor);
+        const contaOriginal =
+            calculo;
 
-    listaHistorico.prepend(item);
+
+        let valor =
+            Function(
+                `"use strict"; return (${calculo})`
+            )();
+
+
+        if (!Number.isFinite(valor)) {
+
+            throw new Error();
+        }
+
+
+        valor =
+            Math.round(
+                (
+                    valor +
+                    Number.EPSILON
+                ) *
+                100000000
+            ) /
+            100000000;
+
+
+        adicionarHistorico(
+            contaOriginal,
+            valor
+        );
+
+
+        expressao.textContent =
+            formatarExpressao(
+                contaOriginal
+            );
+
+
+        resultado.textContent =
+            valor;
+
+
+        calculo =
+            valor.toString();
+
+
+    } catch {
+
+        resultado.textContent =
+            "Erro";
+
+
+        expressao.textContent =
+            "Operação inválida";
+
+
+        calculo = "";
+    }
 }
 
 
-// Limpar histórico
-limparHistorico.addEventListener("click", function () {
+// ==============================
+// BOTÕES
+// ==============================
 
-    listaHistorico.innerHTML = "";
+botoes.forEach(function(botao) {
+
+    botao.addEventListener(
+        "click",
+        function() {
+
+            const valor =
+                botao.dataset.valor;
+
+            const acao =
+                botao.dataset.acao;
+
+
+            if (valor !== undefined) {
+
+                if (valor === "%") {
+
+                    porcentagem();
+
+                } else {
+
+                    adicionar(valor);
+                }
+
+
+            } else if (
+                acao === "limpar"
+            ) {
+
+                limpar();
+
+
+            } else if (
+                acao === "apagar"
+            ) {
+
+                apagar();
+
+
+            } else if (
+                acao === "calcular"
+            ) {
+
+                calcular();
+            }
+
+        }
+    );
 
 });
 
 
-// Funcionamento dos botões
-botoes.forEach(function (botao) {
+// ==============================
+// TECLADO
+// ==============================
 
-    botao.addEventListener("click", function () {
+document.addEventListener(
+    "keydown",
+    function(event) {
 
-        const valor = botao.dataset.valor;
+        const tecla =
+            event.key;
 
-        const acao = botao.dataset.acao;
 
-        if (valor !== undefined) {
+        if (
+            /[0-9+\-*/.%]/.test(tecla)
+        ) {
 
-            adicionar(valor);
+            if (tecla === "%") {
 
-        } else if (acao === "limpar") {
+                porcentagem();
 
-            limpar();
+            } else {
 
-        } else if (acao === "apagar") {
+                adicionar(tecla);
+            }
+        }
 
-            apagar();
 
-        } else if (acao === "calcular") {
+        if (tecla === "Enter") {
+
+            event.preventDefault();
 
             calcular();
         }
 
-    });
 
-});
+        if (
+            tecla === "Backspace"
+        ) {
+
+            apagar();
+        }
 
 
-// Usar o teclado
-document.addEventListener("keydown", function (event) {
+        if (
+            tecla === "Escape"
+        ) {
 
-    const tecla = event.key;
+            limpar();
+        }
 
-    if (/[0-9+\-*/%.]/.test(tecla)) {
-
-        adicionar(tecla);
     }
+);
 
-    if (tecla === "Enter") {
 
-        event.preventDefault();
+// ==============================
+// TEMA
+// ==============================
 
-        calcular();
+
+// Recuperar tema salvo
+const temaSalvo =
+    localStorage.getItem(
+        "temaCalculadora"
+    );
+
+
+if (temaSalvo === "dark") {
+
+    document.body.classList.add("dark");
+
+    tema.textContent = "☾";
+
+} else {
+
+    tema.textContent = "☀️";
+}
+
+
+// Alterar tema
+tema.addEventListener(
+    "click",
+    function() {
+
+        document.body.classList.toggle(
+            "dark"
+        );
+
+
+        if (
+            document.body.classList.contains(
+                "dark"
+            )
+        ) {
+
+            tema.textContent = "☾";
+
+            localStorage.setItem(
+                "temaCalculadora",
+                "dark"
+            );
+
+        } else {
+
+            tema.textContent = "☀️";
+
+            localStorage.setItem(
+                "temaCalculadora",
+                "light"
+            );
+        }
+
     }
-
-    if (tecla === "Backspace") {
-
-        apagar();
-    }
-
-    if (tecla === "Escape") {
-
-        limpar();
-    }
-
-});
+);
 
 
-// Alterar tema claro/escuro
-tema.addEventListener("click", function () {
+// ==============================
+// INICIAR
+// ==============================
 
-    document.body.classList.toggle("dark");
-
-    if (document.body.classList.contains("dark")) {
-
-        tema.textContent = "☾";
-
-    } else {
-
-        tema.textContent = "☀";
-    }
-
-});
+mostrarHistorico();
